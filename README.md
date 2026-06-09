@@ -30,7 +30,7 @@ git clone https://github.com/HillaryOwusu4/ai-toolkit-api
 cd ai-toolkit-api
 python -m venv venv
 source venv/Scripts/activate
-pip install -r requirements.txt0.1:8000/
+pip install -r requirements.txt
 
 # Add your ANTHROPIC_API_KEY to a .env file
 
