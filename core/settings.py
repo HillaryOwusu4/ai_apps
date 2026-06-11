@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'recipes',
     'rest_framework',
     'reviews',
-    'emails'
+    'emails',
+    'docchat'
 ]
 
 MIDDLEWARE = [

@@ -1,54 +1,66 @@
 # AI Toolkit API
 
-A Django REST API powered by Anthropic's Claude, offering three AI-powered endpoints for content generation and analysis.
+A Django REST API powered by Anthropic's Claude — four AI endpoints for generation, analysis, and document Q&A.
 
 ## Features
 
+📄 **DocChat (RAG)** ⭐ — Ask questions about any document using semantic search
 🍳 **Recipe Generator** — Send ingredients, get a structured recipe
-📊 **Review Analyzer** — Analyze customer reviews for sentiment, issues & suggested replies
-📧 **Subject Line Generator** — Generate email subject lines in any tone
+📊 **Review Analyzer** — Sentiment, issues & suggested replies
+📧 **Subject Line Generator** — Email subject lines in any tone
+
+## ⭐ Flagship: DocChat — RAG Document Q&A
+
+Ask questions about any document. Uses semantic search with
+sentence-transformer embeddings — finds answers by MEANING,
+not keywords ("how do I get my money back?" correctly matches
+"refund policy" with zero shared words).
+
+**How it works:**
+1. Document is chunked into passages
+2. Each chunk + the question are embedded (all-MiniLM-L6-v2)
+3. Cosine similarity ranks chunks by relevance
+4. Top chunks are passed to Claude with strict grounding instructions
+5. Claude answers ONLY from the document — no hallucination
 
 ## Tech Stack
-
 - Python 3.12
 - Django + Django REST Framework
 - Anthropic Claude API
+- sentence-transformers (local embeddings)
 - python-dotenv
 
 ## Endpoints
 
-| Method | Endpoint                | Description                        |
-| ------ | ----------------------- | ---------------------------------- |
-| POST   | /api/recipes/generate/  | Generate a recipe from ingredients |
-| POST   | /api/customer_review/analyze/   | Analyze a customer review          |
-| POST   | /api/emails/email_subject/ | Generate email subject lines       |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/docchat/ | Ask questions about a document (RAG) |
+| POST | /api/recipes/generate/ | Generate a recipe from ingredients |
+| POST | /api/customer_review/analyze/ | Analyze a customer review |
+| POST | /api/emails/email_subject/ | Generate email subject lines |
 
 ## Setup
-
-\`\`\`bash
-git clone https://github.com/HillaryOwusu4/ai-toolkit-api
-cd ai-toolkit-api
+```bash
+git clone https://github.com/HillaryOwusu4/ai_apps
+cd ai_apps
 python -m venv venv
 source venv/Scripts/activate
 pip install -r requirements.txt
-
 # Add your ANTHROPIC_API_KEY to a .env file
-
 python manage.py migrate
 python manage.py runserver
-\`\`\`
+```
 
 ## Example
 
-**Request:** \`POST /api/emails/email_subject/\`
-\`\`\`json
-{ "email_body": "Q3 numbers are in, we beat targets by 20%", "tone": "exciting" }
-\`\`\`
+**Request:** `POST /api/docchat/`
+```json
+{ "document": "Refunds are accepted within 30 days. Shipping takes 5 days.", "question": "How do I get my money back?" }
+```
 **Response:**
-\`\`\`json
-{ "subject_options": ["🎉 Q3 Results: We Crushed Our Targets by 20%!", ...], "recommended_pick": "..." }
-\`\`\`
+```json
+{ "question": "How do I get my money back?", "answer": "Refunds are accepted within 30 days." }
+```
 
 ---
-
 Built by Hillary Ameyaw Owusu
