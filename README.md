@@ -9,6 +9,19 @@ A Django REST API powered by Anthropic's Claude — four AI endpoints for genera
 📊 **Review Analyzer** — Sentiment, issues & suggested replies
 📧 **Subject Line Generator** — Email subject lines in any tone
 
+## 🤖 Document Agent (RAG + Tool Use)
+
+An AI agent that decides WHEN to search a document, rather than always 
+retrieving. Combines semantic RAG with Claude's tool-use loop.
+
+**Architecture:**
+- `search_document` (semantic RAG) is exposed to Claude as a TOOL
+- Claude autonomously decides whether to call it based on the question
+- The agent loop runs: think → call tool → observe result → answer
+- Search uses sentence-transformer embeddings + cosine similarity
+
+**Why it matters:** Unlike plain RAG (which always retrieves), the agent 
+reasons about when retrieval is needed — closer to how production AI assistants work.
 ## ⭐ Flagship: DocChat — RAG Document Q&A
 
 Ask questions about any document. Uses semantic search with
